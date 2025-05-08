@@ -1,0 +1,95 @@
+#Import data
+df = pd.read_csv("filename")
+print("df shape:", df.shape)
+df.head()
+
+#Proportiob of respondaents that are business owners
+prop_biz_owners = df["HBUS"].value_counts(normalize=True)[1]
+print("proportion of business owners in df:", prop_biz_owners)
+
+#Distribution difference between business and non-business owners income earners
+inccat_dict = {
+    1: "0-20",
+    2: "21-39.9",
+    3: "40-59.9",
+    4: "60-79.9",
+    5: "80-89.9",
+    6: "90-100",
+}
+
+df_inccat = (
+    df["INCCAT"]
+    .replace(inccat_dict)
+    .groupby(df["HBUS"])
+    .value_counts(normalize=True)
+    .rename("frequency")
+    .to_frame()
+    .reset_index()
+            )
+
+df_inccat
+
+# Bar chart of `df_inccat`
+sns.barplot(data= df_inccat.sort_values(by="INCCAT"),
+            x= "INCCAT",
+            y= "frequency",
+           hue= "HBUS"
+           )
+
+# Plot of "HOUSES" vs "DEBT" with hue as business ownership
+sns.scatterplot(
+    x= "HOUSES",
+    y="DEBT",
+    data= df,
+    hue= "HBUS"
+)
+plt.xlabel("Household Debt")
+plt.ylabel("Home Value")
+plt.title("Home Value vs. Household Debt")
+
+
+#Data Frame of business owners earning below 500_000
+mask = (df["INCOME"] < 500_000) & (df["HBUS"] == 1)
+df_small_biz = df[mask]
+print("df_small_biz shape:", df_small_biz.shape)
+df_small_biz.head()
+
+
+#Age groups of credit-fearful respondents
+# Plot of histogram of "AGE"
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.histplot(
+    data =df_small_biz,
+    x= "AGE",
+    bins= 10,
+    ax=ax
+)
+plt.xlabel("Age")
+plt.ylabel("Frequency (count)")
+plt.title("Small Business Owners: Age Distribution")
+plt.show();
+
+
+# Variance to get 10 largest features
+top_ten_var = df_small_biz.var().sort_values().tail(10)
+top_ten_var
+
+
+# Calculating trimmed variance
+top_ten_trim_var = df_small_biz.apply(trimmed_var).sort_values().tail(10)
+top_ten_trim_var
+
+
+# Horizontal bar chart of `top_ten_trim_var`
+fig = px.bar(
+    x=top_ten_trim_var,
+    y=top_ten_trim_var.index,
+    orientation="h",
+    title="Small Business Owners: High Variance Features"
+)
+fig.update_layout(xaxis_title ="Trimmed Variance [$]", yaxis_title ="Feature")
+fig.show()
+
+# Five features having the highest variance
+high_var_cols = top_ten_trim_var.tail(5).index.to_list()
+high_var_cols
