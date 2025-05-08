@@ -22,7 +22,6 @@ In this analysis, we:
 
 - Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn)
 - Jupyter Notebook
-- [Optional] Streamlit (if integrated into a web app)
 - Git & GitHub
 
 ---
