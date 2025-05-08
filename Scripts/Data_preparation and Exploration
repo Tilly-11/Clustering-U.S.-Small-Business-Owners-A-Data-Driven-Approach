@@ -90,6 +90,12 @@ fig = px.bar(
 fig.update_layout(xaxis_title ="Trimmed Variance [$]", yaxis_title ="Feature")
 fig.show()
 
-# Five features having the highest variance
+# Five features having the highest variance(into list)
 high_var_cols = top_ten_trim_var.tail(5).index.to_list()
 high_var_cols
+
+
+# Creating DataFrame with list
+X = df_small_biz[high_var_cols]
+print("X shape:", X.shape)
+X.head()
