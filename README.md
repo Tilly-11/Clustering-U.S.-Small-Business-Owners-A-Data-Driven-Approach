@@ -20,7 +20,7 @@ In this analysis, we:
 
 ## 🚀 Technologies Used
 
-- Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn)
+- Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn, plotly express)
 - Jupyter Notebook
 - Git & GitHub
 
