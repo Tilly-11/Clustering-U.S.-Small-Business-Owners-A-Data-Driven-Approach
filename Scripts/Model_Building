@@ -1,0 +1,53 @@
+#for loop to build and train a K-Means model where n_clusters ranges from 2 to 12 (inclusive).
+The model include a StandardScaler.Inertia and silhouette_scores. are calculated for each "k"
+n_clusters = range(2 ,13)
+inertia_errors = []
+silhouette_scores = []
+
+# Add `for` loop to train model and calculate inertia, silhouette score.
+for k in n_clusters:
+    model = make_pipeline(
+        StandardScaler(),
+        KMeans(n_clusters=k, random_state=42)
+    )
+    model.fit(X)
+    #inertia
+    inertia_errors.append(model.named_steps["kmeans"].inertia_)
+    #silhouette
+    silhouette_scores.append(silhouette_score(X,model.named_steps["kmeans"].labels_))
+
+print("Inertia:", inertia_errors[:11])
+print()
+print("Silhouette Scores:", silhouette_scores[:3])
+
+
+#Using Line plot of inertia vs. n_cluster to identify optimum "k"
+# Creating line plot of `inertia_errors` vs `n_clusters`
+fig = px.line(
+    x = n_clusters,
+    y = inertia_errors,
+    title = "K-Means Model: Inertia vs Number of Clusters"
+)
+fig.update_layout(xaxis_title="Number of Clusters", yaxis_title="Inertia")
+fig.show()
+
+
+#Using Line plot of silhouette_scores vs. n_cluster to identify optimum "k"
+# Creating a line plot of `silhouette_scores` vs `n_clusters`
+fig = px.line(
+    x = n_clusters,
+    y = silhouette_scores,
+    title = "K-Means Model: Silhouette Score vs Number of Clusters"
+)
+fig.update_layout(xaxis_title="Number of Clusters", yaxis_title="Silhouette Score")
+fig.show()
+
+
+Building final model
+final_model = make_pipeline(
+    StandardScaler(),
+    KMeans(n_clusters=3, random_state=42)
+)
+final_model.fit(X)
+
+
